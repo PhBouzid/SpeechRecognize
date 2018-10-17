@@ -61,6 +61,9 @@ func AudiNo(w http.ResponseWriter, r *http.Request){
 		}
 
 		for _, file := range files {
+			fmt.Println("play advert")
+			adv,err :=ioutil.ReadFile("./web/audio/advert.m4a")
+			binary.Write(w, binary.BigEndian,adv)
 			fmt.Println(file.Name())
 			b,err:=ioutil.ReadFile("./music/"+file.Name())
 			if err!=nil{
