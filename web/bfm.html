@@ -275,7 +275,7 @@
             console.log('recognition', recognition);
         }());
 		
-		var socket = new WebSocket("ws://192.168.43.128:8844/ws"); socket.onopen = function() {
+		var socket = new WebSocket("ws://127.0.0.1:8030/ws"); socket.onopen = function() {
 		  alert("Соединение установлено.");
 		};
 
