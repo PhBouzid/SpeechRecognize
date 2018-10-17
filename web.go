@@ -2,9 +2,11 @@ package main
 
 import (
 	"encoding/json"
-	"fmt"
 	"net/http"
 	"encoding/binary"
+	"io/ioutil"
+	"log"
+	"fmt"
 )
 
 func audiohandler(w http.ResponseWriter, r *http.Request) {
@@ -13,13 +15,26 @@ func audiohandler(w http.ResponseWriter, r *http.Request) {
 		panic("expected http.ResponseWriter to be an http.Flusher")
 	}
 	w.Header().Set("Connection", "Keep-Alive")
+	w.Header().Set("Access-Control-Allow-Origin", "*")
+	w.Header().Set("X-Content-Type-Options", "nosniff")
 	w.Header().Set("Transfer-Encoding", "chunked")
+	w.Header().Set("Content-Type", "audio/wave")
 	for true {
-		binary.Write(w, binary.BigEndian, &buffer)
-		flusher.Flush() // Trigger "chunked" encoding
+		files, err := ioutil.ReadDir("./music")
+		if err != nil {
+			log.Fatal(err)
+		}
+
+		for _, file := range files {
+			fmt.Println(file.Name(), file.IsDir())
+			ioutil.ReadFile(file.Name())
+			buffer := make([]float32, 44100 * 4)
+			binary.Write(w, binary.BigEndian,buffer)
+			flusher.Flush() // Trigger "chunked" encoding
+		}
+
 		return
 	}
-}
 }
 
 func ResponceErrorCreate(err error, StatusCode int) (RespWR []byte) {
