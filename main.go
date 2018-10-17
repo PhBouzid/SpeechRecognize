@@ -16,18 +16,13 @@ func main() {
 	router := mux.NewRouter()
 
 	router.HandleFunc("/audio", Audiohandler)
-	fs := http.FileServer(http.Dir("./web"))
-	router.Handle("/web/", fs)
-	router.Handle("/", fs)
-
+	router.PathPrefix("/index/").Handler(http.StripPrefix("/index/", http.FileServer(http.Dir("./web"))))
 	router.HandleFunc("/play", player)
 	router.HandleFunc("/ws", wsHandler)
-
 	log.Fatal(http.ListenAndServe(":8030", router))
 }
 
 func player(w http.ResponseWriter, r *http.Request) {
-
 	queue <- true
 }
 

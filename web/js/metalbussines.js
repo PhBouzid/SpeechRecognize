@@ -20,7 +20,7 @@ $(document).ready(function(){
 $(document).ready(function(){
     var stream = {
             title: "Demo Stream",
-            mp3: "http://127.0.0.1:7008/audio"
+            mp3: "http://127.0.0.1:8030/audio"
         },
         ready = false;
 
