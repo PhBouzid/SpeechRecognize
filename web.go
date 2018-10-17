@@ -1,37 +1,74 @@
 package main
 
 import (
-	"encoding/json"
-	"fmt"
-	"net/http"
 	"encoding/binary"
+	"fmt"
+	"io/ioutil"
+	"net/http"
 )
 
-func audiohandler(w http.ResponseWriter, r *http.Request) {
-	flusher, ok := w.(http.Flusher)
-	if !ok {
-		panic("expected http.ResponseWriter to be an http.Flusher")
-	}
+func Audiohandler(w http.ResponseWriter, r *http.Request) {
+	//flusher, ok := w.(http.Flusher)
+	/*if !ok {
+		logwarn("expected http.ResponseWriter to be an http.Flusher")
+	}*/
 	w.Header().Set("Connection", "Keep-Alive")
+	w.Header().Set("Access-Control-Allow-Origin", "*")
+	w.Header().Set("X-Content-Type-Options", "nosniff")
 	w.Header().Set("Transfer-Encoding", "chunked")
+	w.Header().Set("Content-Type", "audio/mpeg")
+	w.Header().Set("ice-audio-info", "bitrate=128")
+	w.Header().Set("icy-br", "128")
+	w.Header().Set("icy-description", "Default description")
+	w.Header().Set("icy-genre", "Unspecified")
+	w.Header().Set("icy-name", "RFM Demo Stream")
+	w.Header().Set("icy-pub", "0")
 	for true {
-		binary.Write(w, binary.BigEndian, &buffer)
-		flusher.Flush() // Trigger "chunked" encoding
+		files, err := ioutil.ReadDir("./music")
+		if err != nil {
+			logerror(err)
+		}
+
+		for _, file := range files {
+			fmt.Println(file.Name())
+			b, err := ioutil.ReadFile("./music/" + file.Name())
+			if err != nil {
+				logerror(err)
+			}
+			binary.Write(w, binary.BigEndian, b)
+			//flusher.Flush() // Trigger "chunked" encoding
+		}
 		return
 	}
 }
-}
 
-func ResponceErrorCreate(err error, StatusCode int) (RespWR []byte) {
-	rWrong := ResponceJson{
-		Status:     err.Error(),
-		StatusCode: StatusCode,
+func AudiNo(w http.ResponseWriter, r *http.Request) {
+	w.Header().Set("Connection", "Keep-Alive")
+	w.Header().Set("Access-Control-Allow-Origin", "*")
+	w.Header().Set("X-Content-Type-Options", "nosniff")
+	w.Header().Set("Transfer-Encoding", "chunked")
+	w.Header().Set("Content-Type", "audio/mpeg")
+	w.Header().Set("ice-audio-info", "bitrate=128")
+	w.Header().Set("icy-br", "128")
+	w.Header().Set("icy-description", "Default description")
+	w.Header().Set("icy-genre", "Unspecified")
+	w.Header().Set("icy-name", "RFM Demo Stream")
+	w.Header().Set("icy-pub", "0")
+	for true {
+		files, err := ioutil.ReadDir("./music")
+		if err != nil {
+			logerror(err)
+		}
+
+		for _, file := range files {
+			fmt.Println(file.Name())
+			b, err := ioutil.ReadFile("./music/" + file.Name())
+			if err != nil {
+				logerror(err)
+			}
+			binary.Write(w, binary.BigEndian, b)
+			//flusher.Flush() // Trigger "chunked" encoding
+		}
+		return
 	}
-
-	RespWR, err = json.Marshal(rWrong)
-	if err != nil {
-		logerror(err)
-	}
-
-	return RespWR
 }
