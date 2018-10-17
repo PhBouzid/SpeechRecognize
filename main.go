@@ -6,7 +6,6 @@ import (
 
 func main(){
 	http.HandleFunc("/audio",Audiohandler)
-
 	fs := http.FileServer(http.Dir("./web"))
 	http.Handle("/web/", fs)
 	http.Handle("/", fs)
