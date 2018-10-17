@@ -31,6 +31,10 @@ func player(w http.ResponseWriter, r *http.Request) {
 	queue <- true
 }
 
+func playerlocal() {
+	queue <- true
+}
+
 func wsHandler(w http.ResponseWriter, r *http.Request) {
 	conn, err := websocket.Upgrade(w, r, w.Header(), 1024, 1024)
 
