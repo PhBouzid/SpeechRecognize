@@ -5,7 +5,7 @@ import (
 )
 
 func main(){
-	http.HandleFunc("/audio",audiohandler)
+	http.HandleFunc("/audio",Audiohandler)
 	http.ListenAndServe(":7008",nil)
 }
 
