@@ -1,0 +1,308 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width">
+    <link href="https://fonts.googleapis.com/css?family=Roboto:400,500,700,900&amp;subset=cyrillic-ext" rel="stylesheet">
+    <link rel="stylesheet" href="http://businessfm.kz/css/grid.min.css" />
+    <link rel="stylesheet" href="http://businessfm.kz/css/styles.css" />
+	<script src="js/VoiceRecognition.js"></script>
+    <title>Бизнес FM</title>
+</head>
+ <script>
+        
+    </script>
+	
+<body>
+	<div class="row" style="text-align: center; visibility:hidden ">
+                    <form id="controls" class="form-inline">
+                        <img id="toggle" src="img/microphone_2.png" class="microphone" />
+                        <br/>
+                        <br/>
+                        <select id="language" class="form-control" style="width: 120px;">
+                            <option value="en-GB">English</option>
+                            <option value="ru-RU" selected="">Русский</option>
+                        </select>
+                        <br/>
+                        <br/>
+                        <p>
+                            Click on the microphone icon and begin speaking<br/>
+                            Click again and speech recognition will be stopped
+                        </p>
+                    </form>
+                    <p id="dummy" class="alert-warning" style="display: none;">
+                        Sorry. Your browser not support speech recognition.<br/>
+                        You can try to update it or open this page in Chrome.
+                    </p>
+                </div>
+	<audio id="my-preview" controls autoplay style='visibility:hidden'></audio>
+    <section id="leftSide">
+        <div class="slidesBg">
+            <img src="http://businessfm.kz/images/smalLogo.png" class="logo" alt="" />
+            <div class="player">
+                <!--<div class="soundOfOn">
+                    <span class="soundOn"></span>
+                    <span class="soundOf"></span>
+                </div>
+                <div class="playPause">
+                    <span class="play jp-play"></span>
+                    <span class="pause jp-pause" style="display: none;"></span>
+                </div>-->
+                <div id="jquery_jplayer_1" class="jp-jplayer" style="width: 0px; height: 0px;"><img id="jp_poster_0" style="width: 0px; height: 0px; display: none;"><audio id="jp_audio_0" preload="none" src="http://127.0.0.1:7008/audio"></audio></div>
+                <div id="jp_container_1" class="jp-audio-stream" style="margin: 0 auto;">
+                    <div class="jp-type-single">
+                        <div class="jp-gui jp-interface">
+                            <ul class="jp-controls">
+                                <li><a href="javascript:;" class="jp-mute soundOn" tabindex="1" title="mute"></a></li>
+                                <li><a href="javascript:;" class="jp-unmute soundOff" tabindex="1" title="unmute" style="display: none;"></a></li>
+                                <li><a href="javascript:;" class="jp-play play" tabindex="1" style="display: none;"></a></li>
+                                <li><a href="javascript:;" class="jp-pause pause" tabindex="1" style="display: block;"></a></li>
+                                <!--<li><a href="javascript:;" class="jp-volume-max" tabindex="1" title="max volume">max volume</a></li> -->
+                            </ul>
+                            <!--<div class="jp-volume-bar">
+                                <div class="jp-volume-bar-value" style="width: 80%;"></div>
+                            </div> -->
+                        </div>
+                    </div>
+                </div>
+                <button class="equalizer">
+                    <span class="eq1"></span>
+                    <span class="eq2"></span>
+                    <span class="eq3"></span>
+                </button>
+            </div>
+            <h6>Радиостанция БИЗНЕС FM</h6>
+            <h5><span>89,6 FM</span> Алматы, <span>105,4 FM</span> Астана</h5>
+            <div class="sideFooter">
+                <div class="left">
+                    <p>Наш рекламный отдел г. Алматы:</p>
+                    <div class="conts">
+                        <a href="tel:87273152430">
+                            <span><img src="http://businessfm.kz/images/phone.png" alt="" /></span> 8 727 315 24 30
+                        </a>
+                        <a href="mailto:info@businessfm.kz">
+                            <span><img src="http://businessfm.kz/images/email.png" alt="" /></span> info@businessfm.kz
+                        </a>
+                    </div>
+                </div>
+                <div class="right">
+                    <p>Подписывайтесь на нас:</p>
+                    <nav class="soc">
+                        <a href="https://www.instagram.com/businessfm.kz/" target="_blank"><img src="images/insta.png" alt="" /></a>
+                        <a href="https://www.facebook.com/Бизнес-FM-223770808168011/" target="_blank"><img src="images/fb.png" alt="" /></a>
+                        <a href="https://t.me/businessfmKZ" target="_blank"><img src="images/telegram.png" alt="" /></a>
+                        <a href="https://www.youtube.com/channel/UCxZ5V4pIZ1_nnDL-0FqQ9qg?view_as=subscriber" target="_blank"><img src="images/youtube.png" alt="" /></a>
+                    </nav>
+                </div>
+            </div>
+        </div>
+    </section>
+    <section id="rightSide">
+        <div class="col-md-10 offset-md-1">
+            <h2>Радиостанция<br/><span>БИЗНЕС FM</span><br/>Так звучит успех!</h2>
+            <div class="clear"></div>
+            <div class="miniLine"></div>
+            <div calss="clear"></div>
+            <h6>Финансовое благополучие - испытание лишь для тех, кто им не обладает. </h6>
+            <p>Радиостанция <b>БИЗНЕС FM</b> - это весь спектр деловых и потребительских новостей, собранная воедино вся необходимая информация для успешного ориентирования в деловой и финансовой сферах.</p>
+            <p>Непрерывное вещание на частоте 89,6 FM Алматы, 105,4 FM Астана запущено с целью удовлетворить запросы влиятельной и активной аудитории, которая в любую минуту должна обладать полной информацией о событиях делового мира. Радиостанция для тех, кому нужны точные бизнес - сведения. Уникальное радио для уникальных людей, знающих реальную цену своему времени и своевременной информации, обеспечивающей контроль и власть над ситуацией в деловом мире - БИЗНЕС FM.</p>
+            <div class="clear"></div>
+            <div class="row">
+                <div class="col-sm-6">
+                    <div class="ala">
+                        <p><b>89,6 FM</b><br />Алматы</p>
+                    </div>
+                </div>
+                <div class="col-sm-6">
+                    <div class="ast">
+                        <p><b>105,4 FM</b><br />Астана</p>
+                    </div>
+                </div>
+            </div>
+            <div class="clear"></div>
+            <div class="withLogo">
+                <img src="http://businessfm.kz/images/logoBig.png" alt="" />
+                <p>Информационная радиостанция, созданная специально для аудитории с высоким уровнем дохода и потребления.</p>
+            </div>
+            <div class="clear"></div>
+            <div class="miniLine"></div>
+            <div class="clear"></div>
+            <div class="row">
+                <div class="col-sm-6">
+                    <div class="mission">
+                        <h6>Наша цель</h6>
+                        <p>Cоздание информационного продукта, идеально отвечающего потребностям активной городской аудитории, причисляющей себя к среднему и высшему классу, думающей о повышении своего благосостояния, о том, как заработать деньги и как их потратить.</p>
+                    </div>
+                </div>
+                <div class="col-sm-6">
+                    <div class="mission">
+                        <h6>Наша миссия</h6>
+                        <p>Держать слушателя в курсе всего, что влияет на его финансы и жизнь. Радиостанция является надежным навигатором для премиальной городской аудитории.</p>
+                    </div>
+                </div>
+            </div>
+            <div class="clear"></div>
+            <div class="news">
+                <img src="http://businessfm.kz/images/news.png" alt="" />
+                <p>Деловые новости</p>
+                <div class="newsAbsBlock">
+                    <p>Мы даем потребителю полную информационную картину той жизни, которая касается его дел и интересов. Тематическое поле радиостанции:</p>
+                    <ul>
+                        <li>Общие новости и новости бизнеса.</li>
+                        <li>Полезная информация в сфере личного потребления от образования и моды до недвижимости.</li>
+                        <li>Экспертный анализ важнейших событий в стране и мире под углом зрения их воздействия на экономику и бизнес.</li>
+                        <li>Приглашение в эфир наиболее значимых фигур политики и бизнеса, людей, добившихся впечатляющих результатов в карьере.</li>
+                    </ul>
+                </div>
+            </div>
+            <div class="clear"></div>
+            <div class="miniLine"></div>
+            <div calss="clear"></div>
+            <p><b>Это радио для тех, кому нужен полный объем информации по дороге на совещание или деловую встречу. </b></p>
+            <div class="youtube">
+                <!--<iframe width="100%" height="315" src="https://www.youtube.com/embed/gAFn4GriMgE" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe> -->
+                ​<iframe width="100%" height="500" src="https://www.youtube.com/embed?listType=playlist&list=PL8rluT24rNHKm3sR_pRfdGDHcwsRyVqA7&&showinfo=1" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>
+            </div>
+        </div>
+    </section>
+    <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
+    <script type="text/javascript" src="http://businessfm.kz/js/jquery.jplayer.js"></script>
+    <script type="text/javascript" src="./js/metalbussines.js"></script>
+    <!-- Yandex.Metrika counter -->
+    <script type="text/javascript" >
+        (function (d, w, c) {
+            (w[c] = w[c] || []).push(function() {
+                try {
+                    w.yaCounter48320795 = new Ya.Metrika({
+                        id:48320795,
+                        clickmap:true,
+                        trackLinks:true,
+                        accurateTrackBounce:true,
+                        webvisor:true
+                    });
+                } catch(e) { }
+            });
+
+            var n = d.getElementsByTagName("script")[0],
+                s = d.createElement("script"),
+                f = function () { n.parentNode.insertBefore(s, n); };
+            s.type = "text/javascript";
+            s.async = true;
+            s.src = "https://mc.yandex.ru/metrika/watch.js";
+
+            if (w.opera == "[object Opera]") {
+                d.addEventListener("DOMContentLoaded", f, false);
+            } else { f(); }
+        })(document, window, "yandex_metrika_callbacks");
+		
+		
+		(function() {
+            var dom = {
+                language: document.getElementById('language'),
+                toggle: document.getElementById('toggle'),
+                interim: document.getElementById('interim'),
+                final: document.getElementById('final'),
+                controls: document.getElementById('controls'),
+                dummy: document.getElementById('dummy'),
+                paragraph: null
+            };
+
+            if (!VoiceRecognition.isSupported()) {
+                dom.controls.style.display = 'none';
+                dom.dummy.style.display = 'block';
+                return;
+            }
+
+            var recognition = new VoiceRecognition();
+
+            recognition.interimResults = true;
+            //recognition.continuous = true;
+			recognition.continuous = false;
+            recognition.lang = 'ru-RU';
+
+            recognition.onStart = function() {
+                //dom.toggle.classList.add('recorded');
+                //dom.language.disabled = true;
+                //dom.paragraph = document.createElement('p');
+                //dom.final.appendChild(dom.paragraph);
+            };
+
+            recognition.onResult = function() {
+                //dom.interim.innerHTML = this.interimTranscript;
+				console.log(this.finalTranscript)
+                //dom.paragraph.innerHTML = this.finalTranscript;
+				if(this.finalTranscript.length > 0){
+					rv1=/да/g
+					rv2=/нет/g
+					if(rv1.test(this.finalTranscript) && this.finalTranscript.length == 2){
+						alert('Вы сказали ДА')
+						var audio = document.getElementById('my-preview');
+						audio.src = './yes.m4a';
+						audio.play();
+					};
+					if(rv2.test(this.finalTranscript) && this.finalTranscript.length == 3){
+						alert('Вы сказали НЕТ')
+						var audio = document.getElementById('my-preview');
+						$("body").click();
+						audio.src = './no.m4a';
+						audio.play();
+					};
+				}
+				//recognition.toggle();
+			
+            };
+
+            recognition.onEnd = function() {
+                dom.toggle.classList.remove('recorded');
+                //dom.language.disabled = false;
+            };
+
+            dom.toggle.onclick = function() {
+				console.log(555)
+				if(recognition.isProcessed){
+					recognition.toggle();
+					recognition.toggle();
+				}else{
+					recognition.toggle();
+				}
+                
+            };
+            dom.language.oninput = function() {
+                recognition.lang = this.value;
+            };
+
+            console.log('recognition', recognition);
+        }());
+		
+		var socket = new WebSocket("ws://127.0.0.1:8030/ws"); socket.onopen = function() {
+		  alert("Соединение установлено.");
+		};
+
+		socket.onclose = function(event) {
+		  if (event.wasClean) {
+			alert('Соединение закрыто чисто');
+		  } else {
+			alert('Обрыв соединения'); // например, "убит" процесс сервера
+		  }
+		  console.log('Код: ' + event.code + ' причина: ' + event.reason);
+		};
+
+		socket.onmessage = function(event) {
+		  console.log("Получены данные " + event.data);
+		  $("#toggle").click();
+		};
+
+		socket.onerror = function(error) {
+		  console.log("Ошибка " + error.message);
+		};
+    </script>
+    <noscript><div><img src="https://mc.yandex.ru/watch/48320795" style="position:absolute; left:-9999px;" alt="" /></div></noscript>
+    <!-- /Yandex.Metrika counter -->
+	
+	
+	
+	
+	
+</body>
+</html>
