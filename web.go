@@ -7,8 +7,6 @@ import (
 	"os"
 	"log"
 	"github.com/tcolgate/mp3"
-
-	"strings"
 	"time"
 )
 
@@ -17,17 +15,17 @@ const (
 )
 
 func AudiohandlerMP3(w http.ResponseWriter, r *http.Request){
-	flusher, ok := w.(http.Flusher)
+	/*flusher, ok := w.(http.Flusher)
 	if !ok {
 		logwarn("expected http.ResponseWriter to be an http.Flusher")
-	}
+	}*/
 	w.Header().Set("Connection", "Keep-Alive")
 	w.Header().Set("Access-Control-Allow-Origin", "*")
 	w.Header().Set("X-Content-Type-Options", "nosniff")
 	w.Header().Set("Transfer-Encoding", "chunked")
 	w.Header().Set("Content-Type", "audio/mpeg")
-	w.Header().Set("ice-audio-info","bitrate=128")
-	w.Header().Set("icy-br","128")
+	w.Header().Set("ice-audio-info","bitrate=320")
+	w.Header().Set("icy-br","320")
 	w.Header().Set("icy-description","Default description")
 	w.Header().Set("icy-genre","Unspecified")
 	w.Header().Set("icy-name","RFM Demo Stream")
@@ -37,7 +35,6 @@ func AudiohandlerMP3(w http.ResponseWriter, r *http.Request){
 		hub.selectTrack()
 		r, err := os.Open(hub.track)
 		defer r.Close()
-
 		if err != nil {
 			log.Println(err)
 			fmt.Println("here error")
@@ -56,21 +53,48 @@ func AudiohandlerMP3(w http.ResponseWriter, r *http.Request){
 			}
 			b := make([]byte, f.Size())
 			f.Reader().Read(b)
-			binary.Write(w, binary.BigEndian, b)
-			flusher.Flush()
+			//w.Write(b)
+			binary.Write(w,binary.BigEndian,b)
+			//flusher.Flush()
 			dur=dur+f.Duration().Seconds()
-			time.Sleep(f.Duration())
+			fmt.Println(f.Duration().Seconds())
 		}
-		if(strings.Contains(hub.track,"intro")){
-			fmt.Println("intro found")
-			playerlocal()
-			time.Sleep(5000)
-		}
+
+		time.Sleep(f.Duration())
+		playAdv("./advert/Merged_open_BMW_0_intro.mp3",w)
+		playerlocal()
+
 	}
 
 }
 
 
+func playAdv(name string,w http.ResponseWriter){
+	r, err := os.Open(name)
+	defer r.Close()
+	if err != nil {
+		log.Println(err)
+		fmt.Println("here error advert")
+		return
+	}
+
+	d := mp3.NewDecoder(r)
+	var f mp3.Frame
+	skipped := 0
+	dur:=0.0
+	for {
+		if err := d.Decode(&f,&skipped); err != nil {
+			log.Println(err)
+			break
+		}
+		b := make([]byte, f.Size())
+		f.Reader().Read(b)
+		binary.Write(w,binary.BigEndian,b)
+		dur=dur+f.Duration().Seconds()
+		//time.Sleep(f.Duration())
+	}
+
+}
 
 func Audiohandler(w http.ResponseWriter, r *http.Request) {
 	flusher, ok := w.(http.Flusher)

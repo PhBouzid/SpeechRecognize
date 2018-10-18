@@ -42,7 +42,7 @@ $(document).ready(function(){
         },
         swfPath: "js",
         supplied: "mp3",
-        preload: "none",
+        preload: "metadata",
         wmode: "window",
         autoPlay: true,
         keyEnabled: true

@@ -8,8 +8,6 @@ import (
 
 	"github.com/tcolgate/mp3"
 	"fmt"
-	"net/http"
-	"encoding/binary"
 )
 
 // simple hub that manages all the socket connections as a clients
@@ -19,11 +17,8 @@ type Hub struct {
 	register   chan *Client
 	unregister chan *Client
 	track      string
-	trackName  string
 	trackIndex int
-	isAdvert bool
 	tracks []string
-	w http.ResponseWriter
 }
 
 // creates a hub
@@ -43,15 +38,11 @@ func readTracksAt(dir string) []string {
 	if err != nil {
 		panic(err)
 	}
+
 	songs := make([]string, 0)
 	for _, f := range files {
-		if f.Name() != ".gitkeep" {
-			songs = append(songs, dir+"/"+f.Name())
-			songs = append(songs,"./advert/open.mp3")
-			songs = append(songs,"./advert/BMW_02_NEW.MP3")
-			songs = append(songs,"./advert/intro.mp3")
-			fmt.Println(dir+"/"+f.Name())
-		}
+		songs = append(songs, dir+"/"+f.Name())
+		fmt.Println(dir+"/"+f.Name())
 	}
 	return songs
 }
@@ -125,23 +116,7 @@ func (hub *Hub) broadcastMessage(m []byte) {
 }
 
 func (hub *Hub) broadcastMessageViaHTTP(m []byte){
-	flusher, ok := hub.w.(http.Flusher)
-	if !ok {
-		logwarn("expected http.ResponseWriter to be an http.Flusher")
-	}
-	hub.w.Header().Set("Connection", "Keep-Alive")
-	hub.w.Header().Set("Access-Control-Allow-Origin", "*")
-	hub.w.Header().Set("X-Content-Type-Options", "nosniff")
-	hub.w.Header().Set("Transfer-Encoding", "chunked")
-	hub.w.Header().Set("Content-Type", "audio/mpeg")
-	hub.w.Header().Set("ice-audio-info","bitrate=128")
-	hub.w.Header().Set("icy-br","128")
-	hub.w.Header().Set("icy-description","Default description")
-	hub.w.Header().Set("icy-genre","Unspecified")
-	hub.w.Header().Set("icy-name","RFM Demo Stream")
-	hub.w.Header().Set("icy-pub","0")
-	binary.Write(hub.w, binary.BigEndian, m)
-	flusher.Flush()
+
 }
 
 func (hub *Hub) stream() {
