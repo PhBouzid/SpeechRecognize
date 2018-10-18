@@ -7,6 +7,8 @@ import (
 	"os"
 	"log"
 	"github.com/tcolgate/mp3"
+
+	"strings"
 	"time"
 )
 
@@ -15,10 +17,10 @@ const (
 )
 
 func AudiohandlerMP3(w http.ResponseWriter, r *http.Request){
-	//flusher, ok := w.(http.Flusher)
-	/*if !ok {
+	flusher, ok := w.(http.Flusher)
+	if !ok {
 		logwarn("expected http.ResponseWriter to be an http.Flusher")
-	}*/
+	}
 	w.Header().Set("Connection", "Keep-Alive")
 	w.Header().Set("Access-Control-Allow-Origin", "*")
 	w.Header().Set("X-Content-Type-Options", "nosniff")
@@ -45,18 +47,24 @@ func AudiohandlerMP3(w http.ResponseWriter, r *http.Request){
 		d := mp3.NewDecoder(r)
 		var f mp3.Frame
 		skipped := 0
+		dur:=0.0
 		for {
 			if err := d.Decode(&f,&skipped); err != nil {
 				log.Println(err)
-				fmt.Println("here is problem")
+				fmt.Println("done with file ",hub.track)
 				break
 			}
 			b := make([]byte, f.Size())
 			f.Reader().Read(b)
 			binary.Write(w, binary.BigEndian, b)
-		//	flusher.Flush()
+			flusher.Flush()
+			dur=dur+f.Duration().Seconds()
 			time.Sleep(f.Duration())
-
+		}
+		if(strings.Contains(hub.track,"intro")){
+			fmt.Println("intro found")
+			playerlocal()
+			time.Sleep(5000)
 		}
 	}
 
@@ -145,7 +153,7 @@ func Audiohandler(w http.ResponseWriter, r *http.Request) {
 		//go hub.RunHttp()
 		for true{
 			fmt.Println("in for loop")
-			hub.RunHttp()
+			//hub.RunHttp()
 			binary.Write(w, binary.BigEndian, hub.broadcast)
 			flusher.Flush()
 			/*select{

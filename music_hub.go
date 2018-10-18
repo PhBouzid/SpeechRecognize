@@ -19,6 +19,7 @@ type Hub struct {
 	register   chan *Client
 	unregister chan *Client
 	track      string
+	trackName  string
 	trackIndex int
 	isAdvert bool
 	tracks []string
