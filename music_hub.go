@@ -20,6 +20,7 @@ type Hub struct {
 	unregister chan *Client
 	track      string
 	trackIndex int
+	isAdvert bool
 	tracks []string
 	w http.ResponseWriter
 }
@@ -45,6 +46,9 @@ func readTracksAt(dir string) []string {
 	for _, f := range files {
 		if f.Name() != ".gitkeep" {
 			songs = append(songs, dir+"/"+f.Name())
+			songs = append(songs,"./advert/open.mp3")
+			songs = append(songs,"./advert/BMW_02_NEW.MP3")
+			songs = append(songs,"./advert/intro.mp3")
 			fmt.Println(dir+"/"+f.Name())
 		}
 	}
@@ -182,14 +186,12 @@ func (hub *Hub) streamStep() {
 
 		f.Reader().Read(b)
 		hub.SendMessage(b)
-
 		time.Sleep(f.Duration())
 	}
 }
 
 func (hub *Hub) TrackInfo() (mp3.Frame, error) {
 	var f mp3.Frame
-
 	r, err := os.Open(hub.track)
 	if err != nil {
 		log.Println(err)

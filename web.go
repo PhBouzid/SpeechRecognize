@@ -15,10 +15,10 @@ const (
 )
 
 func AudiohandlerMP3(w http.ResponseWriter, r *http.Request){
-	flusher, ok := w.(http.Flusher)
-	if !ok {
+	//flusher, ok := w.(http.Flusher)
+	/*if !ok {
 		logwarn("expected http.ResponseWriter to be an http.Flusher")
-	}
+	}*/
 	w.Header().Set("Connection", "Keep-Alive")
 	w.Header().Set("Access-Control-Allow-Origin", "*")
 	w.Header().Set("X-Content-Type-Options", "nosniff")
@@ -32,14 +32,14 @@ func AudiohandlerMP3(w http.ResponseWriter, r *http.Request){
 	w.Header().Set("icy-pub","0")
 	hub :=MusicHub
 	for true{
-
+		hub.selectTrack()
 		r, err := os.Open(hub.track)
 		defer r.Close()
 
 		if err != nil {
 			log.Println(err)
 			fmt.Println("here error")
-			return
+			break
 		}
 
 		d := mp3.NewDecoder(r)
@@ -49,14 +49,14 @@ func AudiohandlerMP3(w http.ResponseWriter, r *http.Request){
 			if err := d.Decode(&f,&skipped); err != nil {
 				log.Println(err)
 				fmt.Println("here is problem")
-				return
+				break
 			}
 			b := make([]byte, f.Size())
 			f.Reader().Read(b)
 			binary.Write(w, binary.BigEndian, b)
-			flusher.Flush()
+		//	flusher.Flush()
 			time.Sleep(f.Duration())
-			hub.selectTrack()
+
 		}
 	}
 
