@@ -3,12 +3,13 @@ package main
 import (
 	"github.com/gorilla/websocket"
 	"net/http"
+	"encoding/json"
 )
 
 // basic gorilla/websocket upgrader
 var upgrader = websocket.Upgrader{
-	ReadBufferSize:  1024,
-	WriteBufferSize: 1024,
+	ReadBufferSize:  2048,
+	WriteBufferSize: 2048,
 }
 
 // function handles GET request and
@@ -24,4 +25,11 @@ func hubHandler(w http.ResponseWriter, r *http.Request) {
 	MusicHub.Register(client)
 	go client.ReadPump()
 	client.WritePump()
+}
+
+func currentTrackHandler(w http.ResponseWriter, r *http.Request) {
+	trackInfo, _ := MusicHub.TrackInfo()
+	w.Header().Set("Content-Type", "application/json")
+	json.NewEncoder(w).Encode(trackInfo.Duration())
+	w.WriteHeader(http.StatusOK)
 }

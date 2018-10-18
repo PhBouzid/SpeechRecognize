@@ -1,13 +1,15 @@
 package main
 
 import (
-	"errors"
 	"io/ioutil"
 	"log"
 	"os"
 	"time"
 
 	"github.com/tcolgate/mp3"
+	"fmt"
+	"net/http"
+	"encoding/binary"
 )
 
 // simple hub that manages all the socket connections as a clients
@@ -18,8 +20,8 @@ type Hub struct {
 	unregister chan *Client
 	track      string
 	trackIndex int
-
 	tracks []string
+	w http.ResponseWriter
 }
 
 // creates a hub
@@ -29,9 +31,8 @@ func newHub() Hub {
 		broadcast:  make(chan []byte),
 		register:   make(chan *Client),
 		unregister: make(chan *Client),
-
 		trackIndex: 0,
-		tracks:     readTracksAt("music"),
+		tracks:     readTracksAt("./music"),
 	}
 }
 
@@ -40,14 +41,13 @@ func readTracksAt(dir string) []string {
 	if err != nil {
 		panic(err)
 	}
-
 	songs := make([]string, 0)
 	for _, f := range files {
 		if f.Name() != ".gitkeep" {
 			songs = append(songs, dir+"/"+f.Name())
+			fmt.Println(dir+"/"+f.Name())
 		}
 	}
-
 	return songs
 }
 
@@ -87,6 +87,10 @@ func (hub *Hub) SendMessage(message []byte) {
 	hub.broadcast <- message
 }
 
+func (hub *Hub) RunHttp(){
+	go hub.stream()
+}
+
 // main hub process
 func (hub *Hub) Run() {
 	go hub.stream()
@@ -115,10 +119,31 @@ func (hub *Hub) broadcastMessage(m []byte) {
 	}
 }
 
+func (hub *Hub) broadcastMessageViaHTTP(m []byte){
+	flusher, ok := hub.w.(http.Flusher)
+	if !ok {
+		logwarn("expected http.ResponseWriter to be an http.Flusher")
+	}
+	hub.w.Header().Set("Connection", "Keep-Alive")
+	hub.w.Header().Set("Access-Control-Allow-Origin", "*")
+	hub.w.Header().Set("X-Content-Type-Options", "nosniff")
+	hub.w.Header().Set("Transfer-Encoding", "chunked")
+	hub.w.Header().Set("Content-Type", "audio/mpeg")
+	hub.w.Header().Set("ice-audio-info","bitrate=128")
+	hub.w.Header().Set("icy-br","128")
+	hub.w.Header().Set("icy-description","Default description")
+	hub.w.Header().Set("icy-genre","Unspecified")
+	hub.w.Header().Set("icy-name","RFM Demo Stream")
+	hub.w.Header().Set("icy-pub","0")
+	binary.Write(hub.w, binary.BigEndian, m)
+	flusher.Flush()
+}
+
 func (hub *Hub) stream() {
 	for {
 		if err := hub.selectTrack(); err == nil {
 			hub.streamStep()
+			fmt.Println(hub.track)
 		}
 
 		return
@@ -127,13 +152,11 @@ func (hub *Hub) stream() {
 
 func (hub *Hub) selectTrack() error {
 	if hub.trackIndex >= len(hub.tracks) {
-		log.Print("no more songs")
-		return errors.New("no more songs")
+		fmt.Println("no more songs")
+		hub.trackIndex=0
 	}
-
 	hub.track = hub.tracks[hub.trackIndex]
 	hub.trackIndex++
-
 	return nil
 }
 
@@ -143,15 +166,17 @@ func (hub *Hub) streamStep() {
 
 	if err != nil {
 		log.Println(err)
+		fmt.Println("here error")
 		return
 	}
 
 	d := mp3.NewDecoder(r)
 	var f mp3.Frame
-	skipped := 1
+	skipped := 0
 	for {
 		if err := d.Decode(&f,&skipped); err != nil {
 			log.Println(err)
+			fmt.Println("here is problem")
 			return
 		}
 		b := make([]byte, f.Size())
@@ -169,11 +194,12 @@ func (hub *Hub) TrackInfo() (mp3.Frame, error) {
 	r, err := os.Open(hub.track)
 	if err != nil {
 		log.Println(err)
+		fmt.Println("on track info error")
 		return f, err
 	}
 	skipped := 0
 	d := mp3.NewDecoder(r)
 	d.Decode(&f,&skipped)
-
+	fmt.Println(&f)
 	return f, nil
 }

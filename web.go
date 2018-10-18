@@ -3,10 +3,6 @@ package main
 import (
 	"net/http"
 	"encoding/binary"
-	"io/ioutil"
-	"fmt"
-	"bufio"
-	"os"
 )
 
 const (
@@ -30,70 +26,79 @@ func Audiohandler(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("icy-genre","Unspecified")
 	w.Header().Set("icy-name","RFM Demo Stream")
 	w.Header().Set("icy-pub","0")
-
-	for true {
-		files, err := ioutil.ReadDir("./music")
-		if err != nil {
-			logerror(err)
-		}
-
-		for _, file := range files {
-			fmt.Println(file.Name())
-			data, err := os.Open("./music/"+file.Name())
+	/*
+		for true {
+			files, err := ioutil.ReadDir("./music")
 			if err != nil {
 				logerror(err)
 			}
-			buffer := make([]byte, 44100 * 2)
-			reader := bufio.NewReader(data)
-			for  {
-				count, err := reader.Read(buffer)
-				fmt.Println(count)
-				if err != nil {
-					logerror(err)
-				}
-				if count == 0 {
-					break
-				}
-				// if err != io.EOF {
-				//  break
-				// } else {
-				//  err = nil
-				// }
-				binary.Write(w, binary.BigEndian, buffer)
-				flusher.Flush()
-			}
 
-			data.Close()
-			advData, err := os.Open("./web/audio/advert.m4a")
-			advReader := bufio.NewReader(advData)
-			advBuffer := make([]byte, 44100 * 2)
-			for  {
-				count, err := advReader.Read(advBuffer)
-				fmt.Println(count)
+			for _, file := range files {
+				fmt.Println(file.Name())
+				data, err := os.Open("./music/"+file.Name())
 				if err != nil {
 					logerror(err)
 				}
-				if count == 0 {
-					break
+				buffer := make([]byte, 44100 * 2)
+				reader := bufio.NewReader(data)
+				for  {
+					count, err := reader.Read(buffer)
+					fmt.Println(count)
+					if err != nil {
+						logerror(err)
+					}
+					if count == 0 {
+						break
+					}
+					// if err != io.EOF {
+					//  break
+					// } else {
+					//  err = nil
+					// }
+					binary.Write(w, binary.BigEndian, buffer)
+					flusher.Flush()
 				}
-				// if err != io.EOF {
-				//  break
-				// } else {
-				//  err = nil
-				// }
-				binary.Write(w, binary.BigEndian, advBuffer)
+
+				data.Close()
+				advData, err := os.Open("./web/audio/advert.m4a")
+				advReader := bufio.NewReader(advData)
+				advBuffer := make([]byte, 44100 * 2)
+				for  {
+					count, err := advReader.Read(advBuffer)
+					fmt.Println(count)
+					if err != nil {
+						logerror(err)
+					}
+					if count == 0 {
+						break
+					}
+					// if err != io.EOF {
+					//  break
+					// } else {
+					//  err = nil
+					// }
+					binary.Write(w, binary.BigEndian, advBuffer)
+					flusher.Flush()
+				}
+				playerlocal()
+				*//*if(file.Name()=="advert.m4a"){
+					playerlocal()
+					binary.Write(w, binary.BigEndian, make([]byte,1000))
+					flusher.Flush()
+				}*/
+		//}
+		hub :=MusicHub
+		go hub.RunHttp()
+		for true{
+			select{
+			case m :=<-hub.broadcast:
+				binary.Write(w, binary.BigEndian, m)
 				flusher.Flush()
 			}
-			playerlocal()
-			/*if(file.Name()=="advert.m4a"){
-				playerlocal()
-				binary.Write(w, binary.BigEndian, make([]byte,1000))
-				flusher.Flush()
-			}*/
 		}
 
 		return
-	}
+	//}
 }
 
 

@@ -19,6 +19,10 @@ func main() {
 	router.PathPrefix("/index/").Handler(http.StripPrefix("/index/", http.FileServer(http.Dir("./web"))))
 	router.HandleFunc("/play", player)
 	router.HandleFunc("/ws", wsHandler)
+	go MusicHub.Run()
+	router.HandleFunc("/stream", hubHandler)
+	router.HandleFunc("/current", currentTrackHandler)
+
 	log.Fatal(http.ListenAndServe(":8030", router))
 }
 
