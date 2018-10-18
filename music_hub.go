@@ -152,7 +152,6 @@ func (hub *Hub) stream() {
 
 func (hub *Hub) selectTrack() error {
 	if hub.trackIndex >= len(hub.tracks) {
-		fmt.Println("no more songs")
 		hub.trackIndex=0
 	}
 	hub.track = hub.tracks[hub.trackIndex]
